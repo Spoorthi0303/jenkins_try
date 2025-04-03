@@ -24,11 +24,7 @@ pipeline {
  
         stage('Deploy') {
             steps {
-                sh '''
-                python manage.py migrate
-                python manage.py collectstatic --noinput
-                sudo systemctl restart apache2
-                '''
+                sh 'python3 manage.py migrate'
             }
         }
     }
