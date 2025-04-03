@@ -12,6 +12,7 @@ pipeline {
             steps {
                 dir('jenkins_try') {
                     sh 'if [ -f requirements.txt ]; then /usr/bin/python3 -m pip install -r requirements.txt; fi'
+                }
             }
         }
  
