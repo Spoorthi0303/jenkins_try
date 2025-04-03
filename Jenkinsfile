@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-git 'https://github.com/Spoorthi0303/jenkins_try.git'
+                git branch: 'main', url: 'https://github.com/Spoorthi0303/jenkins_try.git'
             }
         }
         stage('Setup Environment') {
