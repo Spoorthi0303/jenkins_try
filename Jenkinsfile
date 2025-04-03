@@ -18,7 +18,7 @@ pipeline {
  
         stage('Run Tests') {
             steps {
-            sh 'usr/bin/python3 manage.py test'
+            sh '/usr/bin/python3 manage.py test'
             }
         }
  
