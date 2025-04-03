@@ -10,8 +10,8 @@ pipeline {
  
         stage('Setup Environment') {
             steps {
-                sh "/usr/bin/python3 -m pip install --upgrade pip"
-                sh "/usr/bin/python3 -m pip install -r requirements.txt"
+                dir('jenkins_try') {
+                    sh 'if [ -f requirements.txt ]; then /usr/bin/python3 -m pip install -r requirements.txt; fi'
             }
         }
  
