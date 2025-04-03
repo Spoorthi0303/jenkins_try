@@ -13,16 +13,17 @@ pipeline {
             steps {
                 sh '''
                 ${PYTHON} -m venv venv
-                source venv/bin/activate
-                pip install -r requirements.txt
-                '''
+                source venv/bin/activate'''
+                dir('jenkins_try') {
+                    sh 'if [ -f requirements.txt ]; then ${PYTHON} -m pip install -r requirements.txt; fi'
+                }
             }
         }
         stage('Run Migrations') {
             steps {
                 sh '''
                 source venv/bin/activate
-${PYTHON} manage.py migrate
+                ${PYTHON} manage.py migrate
                 '''
             }
         }
