@@ -1,30 +1,45 @@
 pipeline {
-    agent any  // Runs on any available agent
- 
+    agent any
+    environment {
+        PYTHON = '/usr/bin/python3' // Adjust if necessary
+    }
     stages {
         stage('Clone Repository') {
             steps {
-            git branch: 'main', url: 'https://github.com/Spoorthi0303/jenkins_try.git'
+git 'https://github.com/Spoorthi0303/jenkins_try.git'
             }
         }
- 
         stage('Setup Environment') {
             steps {
-                dir('jenkins_try') {
-                    sh 'if [ -f requirements.txt ]; then /usr/bin/python3 -m pip install -r requirements.txt; fi'
-                }
+                sh '''
+                ${PYTHON} -m venv venv
+                source venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
- 
-        stage('Run Tests') {
+        stage('Run Migrations') {
             steps {
-            sh '/usr/bin/python3 manage.py test'
+                sh '''
+                source venv/bin/activate
+${PYTHON} manage.py migrate
+                '''
             }
         }
- 
-        stage('Deploy') {
+        stage('Collect Static Files') {
             steps {
-                sh 'python3 manage.py migrate'
+                sh '''
+                source venv/bin/activate
+${PYTHON} manage.py collectstatic --noinput
+                '''
+            }
+        }
+        stage('Run Server') {
+            steps {
+                sh '''
+                source venv/bin/activate
+nohup ${PYTHON} manage.py runserver 0.0.0.0:8000 &
+                '''
             }
         }
     }
