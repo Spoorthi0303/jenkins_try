@@ -10,7 +10,8 @@ pipeline {
  
         stage('Setup Environment') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh "/usr/bin/python3 -m pip install --upgrade pip"
+                sh "/usr/bin/python3 -m pip install -r requirements.txt"
             }
         }
  
