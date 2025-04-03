@@ -1,45 +1,35 @@
 pipeline {
     agent any
     environment {
-        PYTHON = '/usr/bin/python3' // Adjust if necessary
+        PYTHON = '/usr/bin/python3'
     }
+ 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Spoorthi0303/jenkins_try.git'
+                git 'https://github.com/Spoorthi0303/jenkins_try.git'
             }
         }
-        stage('Setup Environment') {
+ 
+        stage('Build') {
             steps {
-                sh '''
-                ${PYTHON} -m venv venv
-                source venv/bin/activate'''
                 dir('jenkins_try') {
                     sh 'if [ -f requirements.txt ]; then ${PYTHON} -m pip install -r requirements.txt; fi'
                 }
             }
         }
-        stage('Run Migrations') {
+ 
+        stage('Test') {
             steps {
-                sh '''
-                source venv/bin/activate
-                ${PYTHON} manage.py migrate
-                '''
+                sh 'python3 manage.py test'
             }
         }
-        stage('Collect Static Files') {
+ 
+        stage('Deploy') {
             steps {
                 sh '''
-                source venv/bin/activate
-${PYTHON} manage.py collectstatic --noinput
-                '''
-            }
-        }
-        stage('Run Server') {
-            steps {
-                sh '''
-                source venv/bin/activate
-nohup ${PYTHON} manage.py runserver 0.0.0.0:8000 &
+                pkill gunicorn || true
+                gunicorn --bind 0.0.0.0:8000 myproject.wsgi:application --daemon
                 '''
             }
         }
