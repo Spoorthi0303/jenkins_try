@@ -28,8 +28,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                pkill gunicorn || true
-                gunicorn --bind 0.0.0.0:8000 myproject.wsgi:application --daemon
+                    pkill gunicorn || true
+                    /Users/sdeshpande1/Library/Python/3.9/bin/gunicorn --bind 0.0.0.0:8000 myproject.wsgi:application --daemon
                 '''
             }
         }
