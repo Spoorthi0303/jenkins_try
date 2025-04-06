@@ -10,7 +10,9 @@ pipeline {
  
         stage('Install Requirements') {
             steps {
-                sh 'pip3 install -r requirements.txt --user'
+                dir('jenkins_try') {
+                    sh 'if [ -f requirements.txt ]; then ${PYTHON} -m pip install -r requirements.txt; fi'
+                }
             }
         }
  
