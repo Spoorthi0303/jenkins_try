@@ -31,7 +31,7 @@ pipeline {
  
          stage('Reload Nginx') {
             steps {
-                sh 'sudo nginx -s reload'
+                sh 'sudo /opt/homebrew/bin/nginx -s reload'
             }
         }
     
