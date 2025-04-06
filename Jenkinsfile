@@ -20,20 +20,18 @@ pipeline {
             }
         }
  
-        stage('Run Gunicorn') {
+         stage('Run Gunicorn') {
             steps {
                 sh 'pkill gunicorn || true'
                 sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
             }
         }
  
-        stage('Reload Nginx') {
+         stage('Reload Nginx') {
             steps {
-                sh '''
-                    pkill gunicorn || true
-                    /Users/sdeshpande1/Library/Python/3.9/bin/gunicorn --bind 0.0.0.0:8000 myproject.wsgi:application --daemon
-                '''
+                sh 'sudo nginx -s reload'
             }
         }
+    
     }
 }
