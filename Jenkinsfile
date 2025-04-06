@@ -1,31 +1,33 @@
 pipeline {
     agent any
-    environment {
-        PYTHON = '/usr/bin/python3'
-    }
  
     stages {
-        stage('Checkout') {
+        stage('Clone Repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/Spoorthi0303/jenkins_try.git'
             }
         }
  
-        stage('Build') {
+        stage('Install Requirements') {
             steps {
-                dir('jenkins_try') {
-                    sh 'if [ -f requirements.txt ]; then ${PYTHON} -m pip install -r requirements.txt; fi'
-                }
+                sh 'pip3 install -r requirements.txt --user'
             }
         }
  
-        stage('Test') {
+        stage('Collect Static Files') {
             steps {
-                sh 'python3 manage.py test'
+                sh 'python3 manage.py collectstatic --noinput'
             }
         }
  
-        stage('Deploy') {
+        stage('Run Gunicorn') {
+            steps {
+                sh 'pkill gunicorn || true'
+                sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
+            }
+        }
+ 
+        stage('Reload Nginx') {
             steps {
                 sh '''
                     pkill gunicorn || true
