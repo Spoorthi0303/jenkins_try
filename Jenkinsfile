@@ -16,20 +16,16 @@ pipeline {
             }
         }
  
-        stage('Collect Static Files') {
+          stage('Collect Static Files') {
             steps {
-                dir('jenkins_try/myproject') {
                 sh '/usr/bin/python3 manage.py collectstatic --noinput'
-                }
             }
         }
  
         stage('Run Gunicorn') {
             steps {
-                dir('jenkins_try') {
-                    sh 'pkill gunicorn || true'
-                    sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
-                }
+                sh 'pkill gunicorn || true'
+                sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
             }
         }
  
