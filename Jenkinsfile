@@ -18,7 +18,7 @@ pipeline {
  
         stage('Collect Static Files') {
             steps {
-                dir('jenkins_try') {
+                dir('jenkins_try/myproject') {
                 sh '/usr/bin/python3 manage.py collectstatic --noinput'
                 }
             }
