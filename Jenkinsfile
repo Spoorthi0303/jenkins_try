@@ -18,22 +18,31 @@ pipeline {
  
         stage('Collect Static Files') {
             steps {
+                dir('jenkins_try') {
                 sh '/usr/bin/python3 manage.py collectstatic --noinput'
+                }
             }
         }
  
-         stage('Run Gunicorn') {
+        stage('Run Gunicorn') {
             steps {
-                sh 'pkill gunicorn || true'
-                sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
+                dir('jenkins_try') {
+                    sh 'pkill gunicorn || true'
+                    sh '~/Library/Python/3.9/bin/gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application --daemon'
+                }
             }
         }
  
-         stage('Reload Nginx') {
+        stage('Reload Nginx') {
             steps {
                 sh 'sudo /opt/homebrew/bin/nginx -s reload'
             }
         }
-    
+    }
+ 
+    post {
+        success {
+            echo 'Deployment complete and Django server started.'
+        }
     }
 }
