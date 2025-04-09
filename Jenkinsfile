@@ -28,7 +28,7 @@ git branch: 'main', url: 'https://github.com/Spoorthi0303/jenkins_try.git'
  
         stage('Run Gunicorn') {
             steps {
-                    sh 'pkill gunicorn || true'
+                    sh 'pkill -f gunicorn || true'
                     sh '~/Library/Python/3.9/bin/gunicorn myproject.wsgi:application --bind 127.0.0.1:8000 --daemon'
                 }
         }
